@@ -65,7 +65,7 @@
 </head>
 <body>
     <h1>STRZELECTWO SPORTOWE - OGRANICZENIA DO BRONI</h1>
-    <div id="progress">Konkurencja <span id="current-category">1</span>/13</div>
+    <div id="progress">Konkurencja <span id="current-category">1</span> z 13</div>
     
     <div id="quiz-container">
         <h2 id="category-title">Konkurencja</h2>
@@ -85,7 +85,7 @@
     </div>
     
     <div id="results-container" class="hidden">
-        <h2>Results</h2>
+        <h2 id="results-category-title">Konkurencja</h2>
         <table id="results-table">
             <thead>
                 <tr>
@@ -105,452 +105,451 @@
     <div id="completion-container" class="hidden">
         <h2>Zakończone!</h2>
         <div id="final-score"></div>
-        <button id="restart-btn">Rozpocznij od nowa</button>
+        <button id="restart-btn">Od nowa</button>
     </div>
 
     <script>
-        // Quiz data - sample with just one category
         const quizData = {
             "Pistolet pneumatyczny": [
                 {
                     question: "Odległość strzelania",
-                    answer: "10 m"
+                    answers: ["10 m", "10", "10m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "1500 g"
+                    answers: ["1500 g", "1500", "1.5", "1.5kg", "1500g", "1.5 kg"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "500 g"
+                    answers: ["500 g", "500", "500g"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "otwarte (szczerbinka i muszka)"
+                    answers: ["otwarte (szczerbinka i muszka)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "tylko wymiary pudełka"
+                    answers: ["tylko wymiary pudełka", "p", "pudełko", "pudelko"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "tylko wymiary pudełka"
+                    answers: ["tylko wymiary pudełka", "p", "pudełko", "pudelko"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "420 x 200 x 50 mm"
+                    answers: ["420 x 200 x 50 mm", "420x200x50"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "4.5 mm (.177)"
+                    answers: ["4.5 mm (.177)", "4.5", "4.5mm", ".177"]
                 }
             ],
             "Pistolet sportowy": [
                 {
                     question: "Odległość strzelania",
-                    answer: "25 m"
+                    answers: ["25 m", "25", "25m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "1400 g"
+                    answers: ["1400 g", "1400", "1400g"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "1000 g"
+                    answers: ["1000 g", "1000", "1000g"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "otwarte (szczerbinka i muszka)"
+                    answers: ["otwarte (szczerbinka i muszka)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "220 mm"
+                    answers: ["220 mm", "220", "220mm"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "153 mm"
+                    answers: ["153 mm", "153", "153mm"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "300 x 150 x 50 mm"
+                    answers: ["300 x 150 x 50 mm", "300x150x50"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "5.6 mm (.22) long rifle"
+                    answers: ["5.6 mm (.22) long rifle", "5.6mmlr", ".22lr"]
                 }
             ],
             "Pistolet szybkostrzelny": [
                 {
                     question: "Odległość strzelania",
-                    answer: "25 m"
+                    answers: ["25 m", "25", "25m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "1400 g"
+                    answers: ["1400 g", "1400", "1400g"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "1000 g"
+                    answers: ["1000 g", "1000", "1000g"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "otwarte (szczerbinka i muszka)"
+                    answers: ["otwarte (szczerbinka i muszka)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "220 mm"
+                    answers: ["220 mm", "220", "220mm"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "153 mm"
+                    answers: ["153 mm", "153", "153mm"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "300 x 150 x 50 mm"
+                    answers: ["300 x 150 x 50 mm", "300x150x50"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "5.6 mm (.22) long rifle"
+                    answers: ["5.6 mm (.22) long rifle", "5.6mmlr", ".22lr"]
                 }
             ],
             "Pistolet standardowy": [
                 {
                     question: "Odległość strzelania",
-                    answer: "25 m"
+                    answers: ["25 m", "25", "25m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "1400 g"
+                    answers: ["1400 g", "1400", "1400g"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "1000 g"
+                    answers: ["1000 g", "1000", "1000g"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "otwarte (szczerbinka i muszka)"
+                    answers: ["otwarte (szczerbinka i muszka)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "220 mm"
+                    answers: ["220 mm", "220", "220mm"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "153 mm"
+                    answers: ["153 mm", "153", "153mm"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "300 x 150 x 50 mm"
+                    answers: ["300 x 150 x 50 mm", "300x150x50"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "5.6 mm (.22) long rifle"
+                    answers: ["5.6 mm (.22) long rifle", "5.6mmlr", ".22lr"]
                 }
             ],
             "Pistolet centralnego zapłonu": [
                 {
                     question: "Odległość strzelania",
-                    answer: "25 m"
+                    answers: ["25 m", "25", "25m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "1400 g"
+                    answers: ["1400 g", "1400", "1400g"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "1000 g"
+                    answers: ["1000 g", "1000", "1000g"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "otwarte (szczerbinka i muszka)"
+                    answers: ["otwarte (szczerbinka i muszka)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "220 mm"
+                    answers: ["220 mm", "220", "220mm"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "153 mm"
+                    answers: ["153 mm", "153", "153mm"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "300 x 150 x 50 mm"
+                    answers: ["300 x 150 x 50 mm", "300x150x50"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "7.62 - 9.65 mm (.30 - .38); UoBiA do 12 mm (.45)"
+                    answers: ["7.62 - 9.65 mm (.30 - .38); UoBiA do 12 mm (.45)"]
                 }
             ],
             "Pistolet dowolny": [
                 {
                     question: "Odległość strzelania",
-                    answer: "50 m"
+                    answers: ["50 m", "50", "50m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "otwarte (szczerbinka i muszka)"
+                    answers: ["otwarte (szczerbinka i muszka)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "nie stosuje się"
+                    answers: ["nie stosuje się", "x", "ns"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "5.6 mm (.22) long rifle"
+                    answers: ["5.6 mm (.22) long rifle", "5.6mmlr", ".22lr"]
                 }
             ],
             "Karabin dowolny (mały kaliber)": [
                 {
                     question: "Odległość strzelania",
-                    answer: "50 m"
+                    answers: ["50 m", "50", "50m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "8 kg"
+                    answers: ["8 kg", "8", "8kg", "8000g", "8000 g"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"
+                    answers: ["otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "nie stosuje się"
+                    answers: ["nie stosuje się", "x", "ns"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "5.6 mm (.22) long rifle"
+                    answers: ["5.6 mm (.22) long rifle", "5.6mmlr", ".22lr"]
                 }
             ],
             "Ruchoma tarcza (karabin małokalibrowy)": [
                 {
                     question: "Odległość strzelania",
-                    answer: "50 m"
+                    answers: ["50 m", "50", "50m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "5.5 kg wraz z lunetą"
+                    answers: ["5.5 kg wraz z lunetą", "5.5 z lunetą"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "500 g"
+                    answers: ["500 g", "500", "500g"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "optyczne (luneta z wbudowanym krzyżem celowniczym)"
+                    answers: ["optyczne (luneta z wbudowanym krzyżem celowniczym)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "1000 mm"
+                    answers: ["1000 mm", "1000", "1000mm"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "nie stosuje się"
+                    answers: ["nie stosuje się", "x", "ns"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "5.6 mm (.22) long rifle"
+                    answers: ["5.6 mm (.22) long rifle", "5.6mmlr", ".22lr"]
                 }
             ],
             "Karabin dowolny (duży kaliber)": [
                 {
                     question: "Odległość strzelania",
-                    answer: "300 m"
+                    answers: ["300 m", "300", "300m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "8 kg"
+                    answers: ["8 kg", "8", "8kg", "8000g", "8000 g"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"
+                    answers: ["otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "nie stosuje się"
+                    answers: ["nie stosuje się", "x", "ns"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "do 8 mm (.315), UoBiA do 12 mm (.45)"
+                    answers: ["do 8 mm (.315), UoBiA do 12 mm (.45)"]
                 }
             ],
             "Karabin standardowy": [
                 {
                     question: "Odległość strzelania",
-                    answer: "300 m"
+                    answers: ["300 m", "300", "300m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "5.5 kg"
+                    answers: ["5.5 kg", "5.5", "5.5kg", "5500 g", "5500g"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "1500 g"
+                    answers: ["1500 g", "1500", "1.5", "1.5kg", "1500g", "1.5 kg"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"
+                    answers: ["otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "muszka nie może wystawać poza widoczny wylot lufy"
+                    answers: ["muszka nie może wystawać poza widoczny wylot lufy"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "762 mm"
+                    answers: ["762 mm", "762", "762mm"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "nie stosuje się"
+                    answers: ["nie stosuje się", "x", "ns"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "do 8 mm (.315), UoBiA do 12 mm (.45)"
+                    answers: ["do 8 mm (.315), UoBiA do 12 mm (.45)"]
                 }
             ],
             "Karabin pneumatyczny": [
                 {
                     question: "Odległość strzelania",
-                    answer: "10 m"
+                    answers: ["10 m", "10", "10m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "5.5 kg"
+                    answers: ["5.5 kg", "5.5", "5.5kg", "5500 g", "5500g"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"
+                    answers: ["otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "muszka nie może wystawać poza widoczny wylot lufy"
+                    answers: ["muszka nie może wystawać poza widoczny wylot lufy"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "850 mm [od tylnej strony mechanizmu do końca wylotu lufy]"
+                    answers: ["850 mm [od tylnej strony mechanizmu do końca wylotu lufy]"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "nie stosuje się"
+                    answers: ["nie stosuje się", "x", "ns"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "4.5 mm (.177)"
+                    answers: ["4.5 mm (.177)", "4.5", "4.5mm", ".177"]
                 }
             ],
             "Ruchoma tarcza (Karabin pneumatyczny)": [
                 {
                     question: "Odległość strzelania",
-                    answer: "10 m"
+                    answers: ["10 m", "10", "10m"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "5.5 kg wraz z lunetą"
+                    answers: ["5.5 kg wraz z lunetą", "5.5 z lunetą"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo", "bo"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "optyczne (luneta z wbudowanym krzyżem celowniczym)"
+                    answers: ["optyczne (luneta z wbudowanym krzyżem celowniczym)"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "300 mm [maksymalna długość lunety]"
+                    answers: ["300 mm [maksymalna długość lunety]", "300mm max długość lunety"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "1000 mm"
+                    answers: ["1000 mm", "1000", "1000mm"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "nie stosuje się"
+                    answers: ["nie stosuje się", "x", "ns"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "4.5 mm (.177)"
+                    answers: ["4.5 mm (.177)", "4.5", "4.5mm", ".177"]
                 }
             ],
             "Skeet, Tap, Double Trap (Strzelba śrutowa gładkolufowa)": [
                 {
                     question: "Odległość strzelania",
-                    answer: "-"
+                    answers: ["-"]
                 },
                 {
                     question: "Maksymalny ciężar broni",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Minimalny ciężar oporu języka spustowego",
-                    answer: "bez ograniczeń"
+                    answers: ["bez ograniczeń", "bo"]
                 },
                 {
                     question: "Dopuszczalne przyrządy celownicze",
-                    answer: "otwarte"
+                    answers: ["otwarte"]
                 },
                 {
                     question: "Maksymalna odległość między muszką i szczerbinką",
-                    answer: "76 mm - maksymalna długość komory nabojowej"
+                    answers: ["76 mm - maksymalna długość komory nabojowej"]
                 },
                 {
                     question: "Maksymalna długość lufy",
-                    answer: "76 mm - maksymalna długość komory nabojowej"
+                    answers: ["76 mm - maksymalna długość komory nabojowej"]
                 },
                 {
                     question: "Wymiary pudełka pomiarowego",
-                    answer: "nie stosuje się"
+                    answers: ["nie stosuje się", "x", "ns"]
                 },
                 {
                     question: "Dopuszczalny kaliber broni (cale)",
-                    answer: "kaliber wagomiarowy nie większy niż 12"
+                    answers: ["kaliber wagomiarowy nie większy niż 12", "max wagomiar 12"]
                 }
             ],
         };
@@ -569,6 +568,7 @@
         const questionsArea = document.getElementById("questions-area");
         const resultsArea = document.getElementById("results-area");
         const categoryTitle = document.getElementById("category-title");
+        const resultsCategoryTitle = document.getElementById("results-category-title");
         const currentCategorySpan = document.getElementById("current-category");
         const scoreDisplay = document.getElementById("score-display");
         const finalScore = document.getElementById("final-score");
@@ -630,12 +630,13 @@
         // Check answers
         function checkAnswers() {
             resultsArea.innerHTML = "";
+            resultsCategoryTitle.textContent = currentCategory;
             let score = 0;
             
             for (let i = 0; i < currentQuestions.length; i++) {
                 const question = currentQuestions[i];
                 const userAnswer = document.getElementById(`answer-${i}`).value.trim();
-                const isCorrect = userAnswer.toLowerCase() === question.answer.toLowerCase();
+                const isCorrect = question.answers.some(element => element.toLowerCase() === userAnswer.toLowerCase());
                 
                 if (isCorrect) score++;
                 
@@ -644,7 +645,7 @@
                 row.innerHTML = `
                     <td>${i + 1}. ${question.question}</td>
                     <td class="${isCorrect ? 'correct' : 'incorrect'}">${userAnswer || '(brak)'}</td>
-                    <td class="correct">${question.answer}</td>
+                    <td class="correct">${question.answers[0]}</td>
                 `;
                 resultsArea.appendChild(row);
             }

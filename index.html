@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRZELECTWO SPORTOWE - OGRANICZENIA DO BRONI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f5f5f5;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #3367d6;
+        }
+        .correct {
+            color: green;
+            font-weight: bold;
+        }
+        .incorrect {
+            color: red;
+            text-decoration: line-through;
+        }
+        .hidden {
+            display: none;
+        }
+        .correct-answer {
+            background-color: #e8f5e9;
+        }
+    </style>
+</head>
+<body>
+    <h1>STRZELECTWO SPORTOWE - OGRANICZENIA DO BRONI</h1>
+    <div id="progress">Konkurencja <span id="current-category">1</span>/13</div>
+    
+    <div id="quiz-container">
+        <h2 id="category-title">Konkurencja</h2>
+        <table id="questions-table">
+            <thead>
+                <tr>
+                    <th width="40%">Ograniczenie</th>
+                    <th width="15%">Odpowiedź</th>
+                    <th width="45%">Poprawna odpowiedź</th>
+                </tr>
+            </thead>
+            <tbody id="questions-area">
+                <!-- Questions will be added here -->
+            </tbody>
+        </table>
+        <button id="submit-btn">OK</button>
+    </div>
+    
+    <div id="results-container" class="hidden">
+        <h2>Results</h2>
+        <table id="results-table">
+            <thead>
+                <tr>
+                    <th width="40%">Ograniczenie</th>
+                    <th width="15%">Odpowiedź</th>
+                    <th width="45%">Poprawna odpowiedź</th>
+                </tr>
+            </thead>
+            <tbody id="results-area">
+                <!-- Results will be added here -->
+            </tbody>
+        </table>
+        <div id="score-display"></div>
+        <button id="continue-btn">Dalej</button>
+    </div>
+    
+    <div id="completion-container" class="hidden">
+        <h2>Zakończone!</h2>
+        <div id="final-score"></div>
+        <button id="restart-btn">Rozpocznij od nowa</button>
+    </div>
+
+    <script>
+        // Quiz data - sample with just one category
+        const quizData = {
+            "Pistolet pneumatyczny": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "10 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "1500 g"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "500 g"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "otwarte (szczerbinka i muszka)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "tylko wymiary pudełka"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "tylko wymiary pudełka"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "420 x 200 x 50 mm"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "4.5 mm (.177)"
+                }
+            ],
+            "Pistolet sportowy": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "25 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "1400 g"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "1000 g"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "otwarte (szczerbinka i muszka)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "220 mm"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "153 mm"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "300 x 150 x 50 mm"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "5.6 mm (.22) long rifle"
+                }
+            ],
+            "Pistolet szybkostrzelny": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "25 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "1400 g"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "1000 g"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "otwarte (szczerbinka i muszka)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "220 mm"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "153 mm"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "300 x 150 x 50 mm"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "5.6 mm (.22) long rifle"
+                }
+            ],
+            "Pistolet standardowy": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "25 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "1400 g"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "1000 g"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "otwarte (szczerbinka i muszka)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "220 mm"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "153 mm"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "300 x 150 x 50 mm"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "5.6 mm (.22) long rifle"
+                }
+            ],
+            "Pistolet centralnego zapłonu": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "25 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "1400 g"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "1000 g"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "otwarte (szczerbinka i muszka)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "220 mm"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "153 mm"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "300 x 150 x 50 mm"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "7.62 - 9.65 mm (.30 - .38); UoBiA do 12 mm (.45)"
+                }
+            ],
+            "Pistolet dowolny": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "50 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "otwarte (szczerbinka i muszka)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "nie stosuje się"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "5.6 mm (.22) long rifle"
+                }
+            ],
+            "Karabin dowolny (mały kaliber)": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "50 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "8 kg"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "nie stosuje się"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "5.6 mm (.22) long rifle"
+                }
+            ],
+            "Ruchoma tarcza (karabin małokalibrowy)": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "50 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "5.5 kg wraz z lunetą"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "500 g"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "optyczne (luneta z wbudowanym krzyżem celowniczym)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "1000 mm"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "nie stosuje się"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "5.6 mm (.22) long rifle"
+                }
+            ],
+            "Karabin dowolny (duży kaliber)": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "300 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "8 kg"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "nie stosuje się"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "do 8 mm (.315), UoBiA do 12 mm (.45)"
+                }
+            ],
+            "Karabin standardowy": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "300 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "5.5 kg"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "1500 g"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "muszka nie może wystawać poza widoczny wylot lufy"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "762 mm"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "nie stosuje się"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "do 8 mm (.315), UoBiA do 12 mm (.45)"
+                }
+            ],
+            "Karabin pneumatyczny": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "10 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "5.5 kg"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "otwarte (szczerbinka i muszka) lub zakryte (przeziernik i muszka)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "muszka nie może wystawać poza widoczny wylot lufy"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "850 mm [od tylnej strony mechanizmu do końca wylotu lufy]"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "nie stosuje się"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "4.5 mm (.177)"
+                }
+            ],
+            "Ruchoma tarcza (Karabin pneumatyczny)": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "10 m"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "5.5 kg wraz z lunetą"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "optyczne (luneta z wbudowanym krzyżem celowniczym)"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "300 mm [maksymalna długość lunety]"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "1000 mm"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "nie stosuje się"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "4.5 mm (.177)"
+                }
+            ],
+            "Skeet, Tap, Double Trap (Strzelba śrutowa gładkolufowa)": [
+                {
+                    question: "Odległość strzelania",
+                    answer: "-"
+                },
+                {
+                    question: "Maksymalny ciężar broni",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Minimalny ciężar oporu języka spustowego",
+                    answer: "bez ograniczeń"
+                },
+                {
+                    question: "Dopuszczalne przyrządy celownicze",
+                    answer: "otwarte"
+                },
+                {
+                    question: "Maksymalna odległość między muszką i szczerbinką",
+                    answer: "76 mm - maksymalna długość komory nabojowej"
+                },
+                {
+                    question: "Maksymalna długość lufy",
+                    answer: "76 mm - maksymalna długość komory nabojowej"
+                },
+                {
+                    question: "Wymiary pudełka pomiarowego",
+                    answer: "nie stosuje się"
+                },
+                {
+                    question: "Dopuszczalny kaliber broni (cale)",
+                    answer: "kaliber wagomiarowy nie większy niż 12"
+                }
+            ],
+        };
+
+        // Global variables
+        let currentCategory = "";
+        let categories = [];
+        let currentCategoryIndex = 0;
+        let totalScore = 0;
+        let currentQuestions = [];
+        
+        // DOM elements
+        const quizContainer = document.getElementById("quiz-container");
+        const resultsContainer = document.getElementById("results-container");
+        const completionContainer = document.getElementById("completion-container");
+        const questionsArea = document.getElementById("questions-area");
+        const resultsArea = document.getElementById("results-area");
+        const categoryTitle = document.getElementById("category-title");
+        const currentCategorySpan = document.getElementById("current-category");
+        const scoreDisplay = document.getElementById("score-display");
+        const finalScore = document.getElementById("final-score");
+        const submitBtn = document.getElementById("submit-btn");
+        const continueBtn = document.getElementById("continue-btn");
+        const restartBtn = document.getElementById("restart-btn");
+
+        // Initialize the quiz
+        function initQuiz() {
+            // Get all categories and shuffle them
+            categories = Object.keys(quizData);
+            categories = shuffleArray(categories);
+            currentCategoryIndex = 0;
+            totalScore = 0;
+            
+            // Start the first category
+            loadCategory();
+        }
+
+        // Load a category
+        function loadCategory() {
+            if (currentCategoryIndex >= categories.length) {
+                completeQuiz();
+                return;
+            }
+            
+            currentCategory = categories[currentCategoryIndex];
+            currentQuestions = quizData[currentCategory];
+            
+            // Update UI
+            categoryTitle.textContent = currentCategory;
+            currentCategorySpan.textContent = currentCategoryIndex + 1;
+            
+            // Generate questions
+            generateQuestions();
+            
+            // Show quiz container
+            quizContainer.classList.remove("hidden");
+            resultsContainer.classList.add("hidden");
+            completionContainer.classList.add("hidden");
+        }
+
+        // Generate questions for the current category
+        function generateQuestions() {
+            questionsArea.innerHTML = "";
+            
+            for (let i = 0; i < currentQuestions.length; i++) {
+                const question = currentQuestions[i];
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${i + 1}. ${question.question}</td>
+                    <td style="padding:0"><input type="text" id="answer-${i}" placeholder="?"></td>
+                    <td></td>
+                `;
+                questionsArea.appendChild(row);
+            }
+        }
+
+        // Check answers
+        function checkAnswers() {
+            resultsArea.innerHTML = "";
+            let score = 0;
+            
+            for (let i = 0; i < currentQuestions.length; i++) {
+                const question = currentQuestions[i];
+                const userAnswer = document.getElementById(`answer-${i}`).value.trim();
+                const isCorrect = userAnswer.toLowerCase() === question.answer.toLowerCase();
+                
+                if (isCorrect) score++;
+                
+                const row = document.createElement("tr");
+                row.className = isCorrect ? "correct-answer" : "";
+                row.innerHTML = `
+                    <td>${i + 1}. ${question.question}</td>
+                    <td class="${isCorrect ? 'correct' : 'incorrect'}">${userAnswer || '(brak)'}</td>
+                    <td class="correct">${question.answer}</td>
+                `;
+                resultsArea.appendChild(row);
+            }
+            
+            totalScore += score;
+            scoreDisplay.textContent = `Score for this category: ${score}/${currentQuestions.length}`;
+            
+            // Show results
+            quizContainer.classList.add("hidden");
+            resultsContainer.classList.remove("hidden");
+        }
+
+        // Complete the quiz
+        function completeQuiz() {
+            const totalQuestions = categories.length * 8;
+            finalScore.textContent = `Wynik: ${totalScore}/${totalQuestions}`;
+            
+            quizContainer.classList.add("hidden");
+            resultsContainer.classList.add("hidden");
+            completionContainer.classList.remove("hidden");
+        }
+
+        // Move to the next category
+        function nextCategory() {
+            currentCategoryIndex++;
+            loadCategory();
+        }
+
+        // Restart the quiz
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        // Fisher-Yates shuffle algorithm
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // Event listeners
+        submitBtn.addEventListener("click", checkAnswers);
+        continueBtn.addEventListener("click", nextCategory);
+        restartBtn.addEventListener("click", restartQuiz);
+
+        // Initialize the quiz when the page loads
+        window.addEventListener("load", initQuiz);
+    </script>
+</body>
+</html>

@@ -5,14 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STRZELECTWO SPORTOWE - OGRANICZENIA DO BRONI</title>
     <style>
+        :root[data-theme="light"] {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --table-border: #dddddd;
+            --table-header: #f5f5f5;
+            --btn-color: #4285f4;
+            --btn-text: white;
+            --correct-color: #4caf50;
+            --incorrect-color: #f44336;
+            --correct-bg: #e8f5e9;
+        }
+        
+        :root[data-theme="dark"] {
+            --bg-color: #1e1e1e;
+            --text-color: #e0e0e0;
+            --table-border: #444444;
+            --table-header: #333333;
+            --btn-color: #2962ff;
+            --btn-text: white;
+            --correct-color: #81c784;
+            --incorrect-color: #e57373;
+            --correct-bg: #1b3429;
+        }
+
         body {
             font-family: Arial, sans-serif;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+        button {
+            width: 300px;
         }
         h1, h2 {
-            color: #333;
+            color: var(--text-color);
         }
         table {
             width: 100%;
@@ -21,23 +51,25 @@
         }
         th, td {
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--table-border);
             text-align: left;
         }
         th {
-            background-color: #f5f5f5;
+            background-color: var(--table-header);
         }
         input[type="text"] {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
-            border: 1px solid #ddd;
+            border: 1px solid var(--table-border);
             border-radius: 4px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
         button {
             padding: 10px 15px;
-            background-color: #4285f4;
-            color: white;
+            background-color: var(--btn-color);
+            color: var(--btn-text);
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -45,25 +77,44 @@
             font-size: 16px;
         }
         button:hover {
-            background-color: #3367d6;
+            opacity: 0.9;
         }
         .correct {
-            color: green;
+            color: var(--correct-color);
             font-weight: bold;
         }
         .incorrect {
-            color: red;
+            color: var(--incorrect-color);
             text-decoration: line-through;
         }
         .hidden {
             display: none;
         }
         .correct-answer {
-            background-color: #e8f5e9;
+            background-color: var(--correct-bg);
+        }
+
+        #theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--btn-color);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
     </style>
 </head>
 <body>
+    <button id="theme-toggle">🌓</button>
     <h1>STRZELECTWO SPORTOWE - OGRANICZENIA DO BRONI</h1>
     <div id="progress">Konkurencja <span id="current-category">1</span> z 13</div>
     
@@ -98,7 +149,6 @@
                 <!-- Results will be added here -->
             </tbody>
         </table>
-        <div id="score-display"></div>
         <button id="continue-btn">Dalej</button>
     </div>
     
@@ -560,6 +610,7 @@
         let currentCategoryIndex = 0;
         let totalScore = 0;
         let currentQuestions = [];
+        let isDarkMode = false;
         
         // DOM elements
         const quizContainer = document.getElementById("quiz-container");
@@ -570,11 +621,11 @@
         const categoryTitle = document.getElementById("category-title");
         const resultsCategoryTitle = document.getElementById("results-category-title");
         const currentCategorySpan = document.getElementById("current-category");
-        const scoreDisplay = document.getElementById("score-display");
         const finalScore = document.getElementById("final-score");
         const submitBtn = document.getElementById("submit-btn");
         const continueBtn = document.getElementById("continue-btn");
         const restartBtn = document.getElementById("restart-btn");
+        const themeToggle = document.getElementById("theme-toggle");
 
         // Initialize the quiz
         function initQuiz() {
@@ -651,7 +702,6 @@
             }
             
             totalScore += score;
-            scoreDisplay.textContent = `Score for this category: ${score}/${currentQuestions.length}`;
             
             // Show results
             quizContainer.classList.add("hidden");
@@ -688,14 +738,42 @@
             }
             return newArray;
         }
+        
+        // Toggle theme between light and dark mode
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            
+            // Save preference to localStorage
+            localStorage.setItem('theme', newTheme);
+            
+            // Update emoji
+            themeToggle.textContent = newTheme === 'light' ? '🌓' : '☀️';
+        }
+
+        // Check for saved theme preference
+        function loadThemePreference() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                themeToggle.textContent = savedTheme === 'light' ? '🌓' : '☀️';
+            }
+        }
 
         // Event listeners
         submitBtn.addEventListener("click", checkAnswers);
         continueBtn.addEventListener("click", nextCategory);
         restartBtn.addEventListener("click", restartQuiz);
+        themeToggle.addEventListener("click", toggleTheme);
 
-        // Initialize the quiz when the page loads
-        window.addEventListener("load", initQuiz);
+        // Initialize
+        window.addEventListener("load", () => {
+            loadThemePreference();
+            initQuiz();
+        });
     </script>
 </body>
 </html>
